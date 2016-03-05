@@ -60,3 +60,5 @@ expected_label = label
 predicted_label = [clf.predict(libs.generate_user_vec(user, user_dict)) for user in user_list]
 
 print(metrics.classification_report(numpy.array(expected_label), numpy.array(predicted_label)))
+
+
