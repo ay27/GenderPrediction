@@ -3,20 +3,18 @@ import arff
 import os
 
 from src import libs
-from src.DataProcess import DataProcess
 
 
-def generate_dict(user_list):
-    jieba.enable_parallel(4)
+def _generate_att_list(count):
+    tmp = list(map(lambda ii: ('attr%d' % ii, 'REAL'), range(count)))
+    tmp.append(('label', ['男', '女']))
+    return tmp
 
-    # split user data
+
+def _generate_raw_dict(user_list):
     user_dict = {}
-    # count = 0
-    # with open('user_dict.txt', 'w') as file:
     for user in user_list:
         words = jieba.lcut(user.content, cut_all=False, HMM=True)
-        # count += 1
-        # print(count)
         words = set(words)
         for word in words:
             if len(word) >= 2:
@@ -24,52 +22,29 @@ def generate_dict(user_list):
                     user_dict[word] += 1
                 else:
                     user_dict[word] = 1
-                #         file_name.write(' %s' % word)
-    tmp = []
-    dict_file = open('dict.txt', 'w')
-    for key in user_dict.keys():
-        if user_dict[key] > 1:
-            tmp.append(key)
-            dict_file.write(' %s' % key)
-
-    return tmp
+    return list(filter(lambda key: user_dict[key] > 1, user_dict))
 
 
-def generate_att_list(count):
-    attrs = []
-    for i in range(count):
-        attrs.append(('attr%d' % i, 'REAL'))
-    attrs.append(('label', ['男', '女']))
-    return attrs
-
-
-if __name__ == '__main__':
-    # read train data
-    dataProc = DataProcess('../data2', None, None)
-    user_list = [user for user in dataProc.get_all_user_obj_with_gender()]
-
-    user_dict = generate_dict(user_list)
-
-    mat = []
-    for user in user_list:
-        vec = libs.generate_user_vec(user, user_dict)
-        vec.append(user.gender)
-        mat.append(vec)
-    print('vec len %d' % len(mat[0]))
-
+def _select_feature(raw_dict, user_mat):
+    # write to arff file
     obj = {}
     obj['relation'] = 'dictionary'
-    obj['attributes'] = generate_att_list(len(user_dict)+1)
-    obj['data'] = mat
+    obj['attributes'] = _generate_att_list(len(raw_dict) + 1)
+    obj['data'] = user_mat
     print('attr len %d' % len(obj['attributes']))
 
-    arff_file = open('test.arff', 'w')
+    arff_file = open('.tmp.arff', 'w')
 
     arff.dump(obj, arff_file)
 
-    ll = os.popen('java -jar gender.jar test.arff').read()
+    # use weka to select feature
+    ll = os.popen('java -jar FeatureSelect/out/artifacts/FeatureSelect_jar/FeatureSelect.jar .tmp.arff').read()
+    os.remove('.tmp.arff')
     selected_index = ll.split()
+    return list(map(lambda index: raw_dict[int(index)], selected_index))
 
-    with open('user_dict.txt', 'w') as file:
-        for index in selected_index:
-            file.write(' %s' % user_dict[int(index)])
+
+def generate_dict(user_raw_data):
+    raw_dict = _generate_raw_dict(user_raw_data)
+    raw_user_mat = libs.pack2mat(user_raw_data, raw_dict)
+    return _select_feature(raw_dict, raw_user_mat)

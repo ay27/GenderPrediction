@@ -3,13 +3,6 @@ import numpy
 from sklearn.metrics import metrics
 
 
-def dict2vector(dict_data):
-    vec = [0 for i in range(10001)]
-    for k in dict_data:
-        vec[k] = dict_data[k]
-    return vec
-
-
 def gender2label(gender):
     if gender == u'男':
         return 1.0
@@ -19,7 +12,7 @@ def gender2label(gender):
         return 0.0
 
 
-def read_gender(filename='gender.txt'):
+def read_gender(filename):
     gender = []
     with open(filename, 'r') as file:
         for g in file.readlines():
@@ -47,3 +40,16 @@ def generate_user_vec(user, dict):
         if len(word) >= 2 and word in dict:
             user_vec[dict.index(word)] += 1
     return user_vec
+
+
+def pack2mat(user_list, raw_dict):
+    return list(map(lambda user: generate_user_vec(user, raw_dict), user_list))
+
+
+def read_dict(dict_path):
+    user_dict = set()
+    with open(dict_path, 'r') as file:
+        for line in file.readline():
+            words = line.split()
+            user_dict.add(words)
+    return list(user_dict)
