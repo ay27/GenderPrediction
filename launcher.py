@@ -1,18 +1,55 @@
+import ast
+import os
+
 import jieba
 
+from src.DataProcess import DataProcess
 from src.GenerateDict import generate_dict
+from src import libs
+from src import TrainModel, TestModel
 
 jieba.enable_parallel(4)
 
 # generate dict
 
-generate_dict('data/data1w/', 'model/user_dict.txt')  # read train data
-dataProc = DataProcess(user_raw_data_path, None, None)
-raw_user_data = list(dataProc.get_all_user_obj_with_gender())
-dictionary = libs.read_dict(dict_path)
-user_mat = libs.pack2mat(raw_user_data, dictionary)
-expected_label = map(lambda user: libs.gender2label(user.gender), raw_user_data)
+train_dirs = 'data/data_s'
+dictionary_path = 'model/dictionary.txt'
+model_dir = 'model/LogisticRegression.txr'
+tmp_user_mat_path = 'model/tmp/user_mat'
+tmp_user_label_path = 'model/tmp/label'
 
-# read train data
-dataProc = DataProcess(raw_user_data_path, None, None)
-user_list = list(dataProc.get_all_user_obj_with_gender())
+
+def read_file(path):
+    with open(path, 'r') as file:
+        return ast.literal_eval(file.readline())
+
+
+if __name__ == '__main__':
+    # data_proc = DataProcess(train_dirs, None, None)
+    # user_raw_data = list(data_proc.get_all_user_obj_with_gender())
+    # raw_dict = generate_dict(user_raw_data)
+    # user_mat = libs.pack2mat(user_raw_data, raw_dict)
+    # labels = libs.read_label(user_raw_data)
+    #
+    # libs.dump2file(tmp_user_mat_path, user_mat)
+    # libs.dump2file(tmp_user_label_path, labels)
+    # libs.dump2file(dictionary_path, raw_dict)
+    if os.path.isfile(tmp_user_mat_path) and os.path.isfile(tmp_user_label_path) and os.path.isfile(dictionary_path):
+        user_mat = read_file(tmp_user_mat_path)
+        labels = read_file(tmp_user_label_path)
+        raw_dict = read_file(dictionary_path)
+    else:
+        data_proc = DataProcess(train_dirs, None, None)
+        user_raw_data = list(data_proc.get_all_user_obj_with_gender())
+        raw_dict = generate_dict(user_raw_data)
+        user_mat = libs.pack2mat(user_raw_data, raw_dict)
+        labels = libs.read_label(user_raw_data)
+
+        libs.dump2file(tmp_user_mat_path, user_mat)
+        libs.dump2file(tmp_user_label_path, labels)
+        libs.dump2file(dictionary_path, raw_dict)
+
+    print('train')
+    TrainModel.train_model(user_mat, labels, raw_dict, model_dir)
+    print('test')
+    TestModel.test_model(user_mat, labels, raw_dict, model_dir)

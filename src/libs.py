@@ -2,6 +2,8 @@ import jieba
 import numpy
 from sklearn.metrics import metrics
 
+from fucking_python_map import async_run
+
 
 def gender2label(gender):
     if gender == u'男':
@@ -34,16 +36,17 @@ def report(str, count, accuracy, expected, predicted):
         file.write('\n===================\n')
 
 
-def generate_user_vec(user, dict):
-    user_vec = [0 for i in range(len(dict)+1)]
+def generate_user_vec(user, raw_dict):
+    user_vec = [0 for i in range(len(raw_dict)+1)]
     for word in jieba.lcut(user.content):
-        if len(word) >= 2 and word in dict:
-            user_vec[dict.index(word)] += 1
+        if len(word) >= 2 and word in raw_dict:
+            user_vec[raw_dict.index(word)] += 1
+    user_vec[-1] = gender2label(user.gender)
     return user_vec
 
 
 def pack2mat(user_list, raw_dict):
-    return list(map(lambda user: generate_user_vec(user, raw_dict), user_list))
+    return list(async_run(lambda user: generate_user_vec(user, raw_dict), user_list))
 
 
 def read_dict(dict_path):
@@ -53,3 +56,13 @@ def read_dict(dict_path):
             words = line.split()
             user_dict.add(words)
     return list(user_dict)
+
+
+def read_label(user_raw_data):
+    return list(async_run(lambda user: gender2label(user.gender), user_raw_data))
+
+
+def dump2file(path, data):
+    with open(path, 'w') as file:
+        file.write(str(data))
+
