@@ -4,12 +4,12 @@ import jieba
 import arff
 import os
 
-from fucking_python_map import async_run
+from fucking_python_map import fucking_map
 from src import libs
 
 
 def _generate_att_list(count):
-    tmp = list(async_run(lambda ii: ('attr%d' % ii, 'REAL'), range(count)))
+    tmp = list(fucking_map(lambda ii: ('attr%d' % ii, 'REAL'), range(count)))
     tmp.append(('label', ['1.0', '-1.0']))
     return tmp
 
@@ -47,7 +47,7 @@ def _select_feature(raw_dict, labels, user_mat):
     ll = os.popen('java -jar FeatureSelect/out/artifacts/FeatureSelect_jar/FeatureSelect.jar .tmp.arff').read()
     os.remove('.tmp.arff')
     selected_index = ll.split()
-    return list(async_run(lambda index: raw_dict[int(index)], selected_index))
+    return list(fucking_map(lambda index: raw_dict[int(index)], selected_index))
 
 
 def generate_dict(user_raw_data):

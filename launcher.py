@@ -12,7 +12,7 @@ jieba.enable_parallel(4)
 
 # generate dict
 
-train_dirs = 'data/data_1w'
+train_dirs = 'data/data_s'
 dictionary_path = 'model/dictionary.txt'
 model_dir = 'model/dump/LogisticRegression.txr'
 tmp_user_mat_path = 'model/tmp/user_mat'

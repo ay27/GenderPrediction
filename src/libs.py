@@ -2,7 +2,7 @@ import jieba
 import numpy
 from sklearn import metrics
 
-from fucking_python_map import async_run
+from fucking_python_map import fucking_map
 
 
 def gender2label(gender):
@@ -45,7 +45,7 @@ def generate_user_vec(user, raw_dict):
 
 
 def pack2mat(user_list, raw_dict):
-    return list(async_run(lambda user: generate_user_vec(user, raw_dict), user_list))
+    return list(fucking_map(lambda user: generate_user_vec(user, raw_dict), user_list))
 
 
 def read_dict(dict_path):
@@ -58,7 +58,7 @@ def read_dict(dict_path):
 
 
 def read_label(user_raw_data):
-    return list(async_run(lambda user: gender2label(user.gender), user_raw_data))
+    return list(fucking_map(lambda user: gender2label(user.gender), user_raw_data))
 
 
 def dump2file(path, data):

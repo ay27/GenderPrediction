@@ -1,10 +1,10 @@
 import arff
 
-from fucking_python_map import async_run
+from fucking_python_map import fucking_map
 
 
 def _generate_att_list(count):
-    tmp = list(async_run(lambda ii: ('attr%d' % ii, 'REAL'), range(count)))
+    tmp = list(fucking_map(lambda ii: ('attr%d' % ii, 'REAL'), range(count)))
     tmp.append(('label', ['男', '女']))
     return tmp
 
