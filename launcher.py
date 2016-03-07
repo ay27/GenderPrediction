@@ -1,14 +1,13 @@
 import ast
 import os
-
 import jieba
-
+import multiprocessing as mp
 from src.DataProcess import DataProcess
 from src.GenerateDict import generate_dict
 from src import libs
 from src import TrainModel, TestModel
 
-jieba.enable_parallel(4)
+jieba.enable_parallel(mp.cpu_count())
 
 # generate dict
 
@@ -19,27 +18,26 @@ tmp_user_mat_path = 'model/tmp/user_mat'
 tmp_user_label_path = 'model/tmp/label'
 
 
-def read_file(path):
-    with open(path, 'r') as file:
-        return ast.literal_eval(file.readline())
-
-
+# 整个代码的逻辑是:
+# 先将文本的raw数据转换为可以处理的矩阵,然后train,test
 if __name__ == '__main__':
+    # 判断是否已存在某些处理过的数据,若存在,则直接使用;否则需要重新生成
     if os.path.isfile(tmp_user_mat_path) and os.path.isfile(tmp_user_label_path) and os.path.isfile(dictionary_path):
-        user_mat = read_file(tmp_user_mat_path)
-        labels = read_file(tmp_user_label_path)
-        raw_dict = read_file(dictionary_path)
+        user_mat = libs.read_file(tmp_user_mat_path)
+        labels = libs.read_file(tmp_user_label_path)
+        raw_dict = libs.read_file(dictionary_path)
     else:
         data_proc = DataProcess(train_dirs, None, None)
         user_raw_data = list(data_proc.get_all_user_obj_with_gender())
         if os.path.isfile(dictionary_path):
-            raw_dict = read_file(dictionary_path)
+            raw_dict = libs.read_file(dictionary_path)
         else:
             raw_dict = generate_dict(user_raw_data)
 
         user_mat = libs.pack2mat(user_raw_data, raw_dict)
         labels = libs.read_label(user_raw_data)
 
+        # 将生成的数据dump出来,以便下次使用
         libs.dump2file(tmp_user_mat_path, user_mat)
         libs.dump2file(tmp_user_label_path, labels)
         libs.dump2file(dictionary_path, raw_dict)
