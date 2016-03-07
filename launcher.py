@@ -12,9 +12,9 @@ jieba.enable_parallel(4)
 
 # generate dict
 
-train_dirs = 'data/data_s'
+train_dirs = 'data/data_1w'
 dictionary_path = 'model/dictionary.txt'
-model_dir = 'model/LogisticRegression.txr'
+model_dir = 'model/dump/LogisticRegression.txr'
 tmp_user_mat_path = 'model/tmp/user_mat'
 tmp_user_label_path = 'model/tmp/label'
 
@@ -25,15 +25,6 @@ def read_file(path):
 
 
 if __name__ == '__main__':
-    # data_proc = DataProcess(train_dirs, None, None)
-    # user_raw_data = list(data_proc.get_all_user_obj_with_gender())
-    # raw_dict = generate_dict(user_raw_data)
-    # user_mat = libs.pack2mat(user_raw_data, raw_dict)
-    # labels = libs.read_label(user_raw_data)
-    #
-    # libs.dump2file(tmp_user_mat_path, user_mat)
-    # libs.dump2file(tmp_user_label_path, labels)
-    # libs.dump2file(dictionary_path, raw_dict)
     if os.path.isfile(tmp_user_mat_path) and os.path.isfile(tmp_user_label_path) and os.path.isfile(dictionary_path):
         user_mat = read_file(tmp_user_mat_path)
         labels = read_file(tmp_user_label_path)

@@ -1,6 +1,6 @@
 import jieba
 import numpy
-from sklearn.metrics import metrics
+from sklearn import metrics
 
 from fucking_python_map import async_run
 
