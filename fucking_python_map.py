@@ -9,6 +9,7 @@ import copy
 import multiprocessing as mp
 import math
 import sys
+import numpy as np
 
 
 PY_VERSION = sys.version_info.major

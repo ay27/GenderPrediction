@@ -37,11 +37,10 @@ def report(str, count, accuracy, expected, predicted):
 
 
 def generate_user_vec(user, raw_dict):
-    user_vec = [0 for i in range(len(raw_dict)+1)]
+    user_vec = [0 for i in range(len(raw_dict))]
     for word in jieba.lcut(user.content):
         if len(word) >= 2 and word in raw_dict:
             user_vec[raw_dict.index(word)] += 1
-    user_vec[-1] = gender2label(user.gender)
     return user_vec
 
 
@@ -66,3 +65,6 @@ def dump2file(path, data):
     with open(path, 'w') as file:
         file.write(str(data))
 
+
+def sign(x):
+    return 1.0 if x > 0 else -1.0

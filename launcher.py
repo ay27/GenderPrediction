@@ -41,7 +41,11 @@ if __name__ == '__main__':
     else:
         data_proc = DataProcess(train_dirs, None, None)
         user_raw_data = list(data_proc.get_all_user_obj_with_gender())
-        raw_dict = generate_dict(user_raw_data)
+        if os.path.isfile(dictionary_path):
+            raw_dict = read_file(dictionary_path)
+        else:
+            raw_dict = generate_dict(user_raw_data)
+
         user_mat = libs.pack2mat(user_raw_data, raw_dict)
         labels = libs.read_label(user_raw_data)
 

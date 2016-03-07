@@ -1,3 +1,5 @@
+import copy
+
 import jieba
 import arff
 import os
@@ -26,12 +28,15 @@ def _generate_raw_dict(user_list):
     return list(filter(lambda key: user_dict[key] > 1, user_dict))
 
 
-def _select_feature(raw_dict, user_mat):
+def _select_feature(raw_dict, labels, user_mat):
     # write to arff file
     obj = {}
     obj['relation'] = 'dictionary'
     obj['attributes'] = _generate_att_list(len(raw_dict))
-    obj['data'] = user_mat
+    concat_user_mat = copy.deepcopy(user_mat)
+    for ii in range(len(concat_user_mat)):
+        concat_user_mat[ii].append(labels[ii])
+    obj['data'] = concat_user_mat
     print('attr len %d' % len(obj['attributes']))
 
     arff_file = open('.tmp.arff', 'w')
@@ -48,4 +53,5 @@ def _select_feature(raw_dict, user_mat):
 def generate_dict(user_raw_data):
     raw_dict = _generate_raw_dict(user_raw_data)
     raw_user_mat = libs.pack2mat(user_raw_data, raw_dict)
-    return _select_feature(raw_dict, raw_user_mat)
+    labels = libs.read_label(user_raw_data)
+    return _select_feature(raw_dict, labels, raw_user_mat)
