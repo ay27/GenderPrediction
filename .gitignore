@@ -60,8 +60,3 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
-
-# For Java
-.idea/
-*.class
-FeatureSelect/out/production/
