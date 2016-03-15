@@ -6,8 +6,23 @@ from src.DataProcess import DataProcess
 from src.GenerateDict import generate_dict
 from src import libs
 from src import TrainModel, TestModel
+import platform
 
-# jieba.enable_parallel(mp.cpu_count())
+
+WIN = 0
+LINUX = 1
+Darwin = 2
+
+if "Windows" in platform.platform():
+    SYS_VER = WIN
+elif "Darwin" in platform.platform():
+    SYS_VER = Darwin
+else:
+    SYS_VER = LINUX
+
+
+if SYS_VER != WIN:
+    jieba.enable_parallel(mp.cpu_count())
 
 # generate dict
 

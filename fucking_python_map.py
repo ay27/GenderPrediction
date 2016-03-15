@@ -9,8 +9,7 @@ import copy
 import multiprocessing as mp
 import math
 import sys
-import numpy as np
-
+import platform
 
 PY_VERSION = sys.version_info.major
 if PY_VERSION == 3:
@@ -29,7 +28,7 @@ def _auto_split(length, count):
     start = []
     end = []
     fr = int(math.ceil(length / float(count)))
-    tt = fr*count - length
+    tt = fr * count - length
     pc = 0
     for ii in range(count - tt):
         start.append(pc)
@@ -59,22 +58,23 @@ class _Worker(mp.Process):
 
 
 def fucking_map(func, iterable, process_count=mp.cpu_count()):
-    return list(map(func, iterable))
-    # manager = mp.Manager()
-    # data = manager.list(iterable)
-    # start_index, end_index = _auto_split(len(data), process_count)
-    # result = manager.list(range(len(iterable)))
-    # p = [_Worker(func, data, result, start_index[ii], end_index[ii]) for ii in range(process_count)]
-    # for ii in range(process_count):
-    #     p[ii].start()
-    # for ii in range(process_count):
-    #     p[ii].join()
-    # return copy.deepcopy(result)
+    if "Windows" in platform.platform():
+        return list(map(func, iterable))
+    manager = mp.Manager()
+    data = manager.list(iterable)
+    start_index, end_index = _auto_split(len(data), process_count)
+    result = manager.list(range(len(iterable)))
+    p = [_Worker(func, data, result, start_index[ii], end_index[ii]) for ii in range(process_count)]
+    for ii in range(process_count):
+        p[ii].start()
+    for ii in range(process_count):
+        p[ii].join()
+    return copy.deepcopy(result)
 
 
 if __name__ == '__main__':
     def func(xx, yy):
-        return xx*yy
+        return xx * yy
+
+
     print(fucking_map(lambda kk: func(kk, 2), range(100), 6))
-
-
