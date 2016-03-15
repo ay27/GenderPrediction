@@ -27,7 +27,7 @@ def _generate_raw_dict(user_list):
                     user_dict[word] += 1
                 else:
                     user_dict[word] = 1
-    return list(filter(lambda key: user_dict[key] > 1, user_dict))
+    return list(filter(lambda key: user_dict[key] > 10, user_dict))
 
 
 # 调用使用weka库编写的特征选择方法,筛选优秀的特征

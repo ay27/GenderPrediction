@@ -59,7 +59,7 @@ class _Worker(mp.Process):
 
 
 def fucking_map(func, iterable, process_count=mp.cpu_count()):
-    return map(func, iterable)
+    return list(map(func, iterable))
     # manager = mp.Manager()
     # data = manager.list(iterable)
     # start_index, end_index = _auto_split(len(data), process_count)
