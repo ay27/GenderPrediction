@@ -20,6 +20,6 @@ if __name__ == '__main__':
     obj['data'] = user_mat
     print('attr len %d' % len(obj['attributes']))
 
-    arff_file = open('.tmp.arff', 'w')
+    arff_file = open('.tmp.arff', 'w', encoding='urf-8')
 
     arff.dump(obj, arff_file)

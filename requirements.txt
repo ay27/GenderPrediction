@@ -1,0 +1,5 @@
+jieba==0.38
+numpy==1.10.2
+scikit-learn==0.17
+scipy==0.16.1
+liac-arff==2.1.0

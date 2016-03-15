@@ -35,10 +35,10 @@ def read_label(user_raw_data):
 
 # 以下这两个函数一一对应
 def dump2file(path, data):
-    with open(path, 'w') as file:
+    with open(path, 'w', encoding='utf-8') as file:
         file.write(str(data))
 
 
 def read_file(path):
-    with open(path, 'r') as file:
+    with open(path, 'r', encoding='utf-8') as file:
         return ast.literal_eval(file.readline())

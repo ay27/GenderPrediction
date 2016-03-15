@@ -59,16 +59,17 @@ class _Worker(mp.Process):
 
 
 def fucking_map(func, iterable, process_count=mp.cpu_count()):
-    manager = mp.Manager()
-    data = manager.list(iterable)
-    start_index, end_index = _auto_split(len(data), process_count)
-    result = manager.list(range(len(iterable)))
-    p = [_Worker(func, data, result, start_index[ii], end_index[ii]) for ii in range(process_count)]
-    for ii in range(process_count):
-        p[ii].start()
-    for ii in range(process_count):
-        p[ii].join()
-    return copy.deepcopy(result)
+    return map(func, iterable)
+    # manager = mp.Manager()
+    # data = manager.list(iterable)
+    # start_index, end_index = _auto_split(len(data), process_count)
+    # result = manager.list(range(len(iterable)))
+    # p = [_Worker(func, data, result, start_index[ii], end_index[ii]) for ii in range(process_count)]
+    # for ii in range(process_count):
+    #     p[ii].start()
+    # for ii in range(process_count):
+    #     p[ii].join()
+    # return copy.deepcopy(result)
 
 
 if __name__ == '__main__':

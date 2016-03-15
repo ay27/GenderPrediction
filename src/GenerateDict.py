@@ -41,7 +41,7 @@ def _select_feature(raw_dict, labels, user_mat):
         concat_user_mat[ii].append(labels[ii])
     obj['data'] = concat_user_mat
 
-    arff_file = open('.tmp.arff', 'w')
+    arff_file = open('.tmp.arff', 'w', encoding='utf-8')
     arff.dump(obj, arff_file)
 
     # use weka to select feature

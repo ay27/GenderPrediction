@@ -16,7 +16,7 @@ class DataProcess:
     def get_all_user_obj_with_gender(self):
         file_list = os.listdir(self.source_folder)
         for filename in file_list:
-            with open(r"%s/%s" % (self.source_folder, filename), "r") as input_source:
+            with open(r"%s/%s" % (self.source_folder, filename), "r", encoding="utf-8") as input_source:
                 for userText in input_source:
                     if len(userText) > 0:
                         userObject = User(userText)
@@ -34,7 +34,7 @@ class DataProcess:
     def get_all_userObjects_without_genderLabel(self):
         file_list = os.listdir(self.source_folder)
         for filename in file_list:
-            with open(r"%s/%s" % (self.source_folder, filename), "r") as input_source:
+            with open(r"%s/%s" % (self.source_folder, filename), "r", encoding='urf-8') as input_source:
                 for userText in input_source:
                     # userText = userText.encode("utf-8").strip()
                     # userText = unicode(userText.strip(), "utf8")
@@ -49,7 +49,7 @@ class DataProcess:
     def get_all_userObjects(self):
         file_list = os.listdir(self.source_folder)
         for filename in file_list:
-            with open(r"%s/%s" % (self.source_folder, filename), "r") as input_source:
+            with open(r"%s/%s" % (self.source_folder, filename), "r", encoding='utf-8') as input_source:
                 for userText in input_source:
                     # userText = userText.encode("utf-8").strip()
                     # userText = unicode(userText.strip(), "utf8")
@@ -62,7 +62,7 @@ class DataProcess:
     def get_wordDict(self):
         if self.word_dict is not None:
             return self.word_dict
-        with open(self.wordDictFilename, "r") as inputTexts:
+        with open(self.wordDictFilename, "r", encoding='utf-8') as inputTexts:
             texts = inputTexts.read()
             texts_list = texts.split("\n")
             key_list = texts_list[0].split(" ")
@@ -75,7 +75,7 @@ class DataProcess:
             return self.word_dict
 
     def get_weightofFeatures(self):
-        with open(self.weightofFeaturesFilename, "r") as inputTexts:
+        with open(self.weightofFeaturesFilename, "r", encoding='utf-8') as inputTexts:
             weight_string = inputTexts.read().split(" ")
             weightofFeatures = [float(x) for x in weight_string]
             return weightofFeatures
