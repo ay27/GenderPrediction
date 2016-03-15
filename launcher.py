@@ -7,7 +7,7 @@ from src.GenerateDict import generate_dict
 from src import libs
 from src import TrainModel, TestModel
 
-jieba.enable_parallel(mp.cpu_count())
+# jieba.enable_parallel(mp.cpu_count())
 
 # generate dict
 

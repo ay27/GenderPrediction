@@ -46,7 +46,7 @@ def _select_feature(raw_dict, labels, user_mat):
 
     # use weka to select feature
     ll = os.popen('java -jar FeatureSelect/out/artifacts/FeatureSelect_jar/FeatureSelect.jar .tmp.arff').read()
-    os.remove('.tmp.arff')
+    # os.remove('.tmp.arff')
     selected_index = ll.split()
     return list(fucking_map(lambda index: raw_dict[int(index)], selected_index))
 

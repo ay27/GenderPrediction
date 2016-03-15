@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FeatureSelect:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/FeatureSelect_jar</output-path>
+    <root id="archive" name="FeatureSelect.jar">
+      <element id="module-output" name="FeatureSelect" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/weka.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
