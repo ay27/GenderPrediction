@@ -17,6 +17,7 @@ def _generate_att_list(count):
 
 # 根据所有的训练数据生成词典.当词长至少为2时才记录,免去了大量的单字词语;同时将出现次数小于2的词删去
 def _generate_raw_dict(user_list):
+    jieba.load_userdict('data/place_dict.txt')
     user_dict = {}
     for user in user_list:
         words = jieba.lcut(user.content, cut_all=False, HMM=True)

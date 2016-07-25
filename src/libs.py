@@ -3,15 +3,18 @@ import ast
 import jieba
 from fucking_python_map import fucking_map
 
+place = []
+with open('data/place.txt') as f:
+    for row in f:
+        row = row.split()
+        place.append([row[0], int(row[1])])
 
-# 将文本数据转换为数值数据
+
 def gender2label(gender):
-    if gender == u'男':
-        return 1.0
-    elif gender == u'女':
-        return -1.0
-    else:
-        return 0.0
+    for row in place:
+        if gender in row[0]:
+            return row[1]
+    return 0
 
 
 # 将用户的评论文本分词,然后根据词典生成向量.此处对词的长度做了限制,唯有当词长至少为2时才记录

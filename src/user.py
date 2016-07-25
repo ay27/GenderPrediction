@@ -12,6 +12,7 @@ class User:
     weight_comp = re.compile(r",\"weight\":\"(.*?)\",")
     content_comp = re.compile(r",\"content\":\"(.*?)\",")
     title_comp = re.compile(r",\"title\":\"(.*?)\",")
+    home_place_comp = re.compile(r",\"home_place\":\"(.*?)\",")
 
     def __init__(self, userText):
         userText = "".join(userText.split())
@@ -24,6 +25,8 @@ class User:
         self.internetAccount = "".join(set(User.internet_account_comp.findall(userText)))
         self.realName = "".join(set(User.real_name_comp.findall(userText)))
         self.weight = "".join(set(User.weight_comp.findall(userText)))
+        self.place = "".join(set(User.home_place_comp.findall(userText)))
+        self.gender = self.place
 
         self.content = "".join("$*$".join(User.content_comp.findall(userText)).split())
         self.title = "".join("$*$".join(set(User.title_comp.findall(userText))).split())

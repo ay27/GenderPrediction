@@ -8,7 +8,6 @@ from src import libs
 from src import TrainModel, TestModel
 import platform
 
-
 WIN = 0
 LINUX = 1
 Darwin = 2
@@ -20,18 +19,16 @@ elif "Darwin" in platform.platform():
 else:
     SYS_VER = LINUX
 
-
 if SYS_VER != WIN:
     jieba.enable_parallel(mp.cpu_count())
 
 # generate dict
 
-train_dirs = 'data/data_s'
+train_dirs = 'data/home_place'
 dictionary_path = 'model/dictionary.txt'
 model_dir = 'model/dump/LogisticRegression.txr'
 tmp_user_mat_path = 'model/tmp/user_mat'
 tmp_user_label_path = 'model/tmp/label'
-
 
 # 整个代码的逻辑是:
 # 先将文本的raw数据转换为可以处理的矩阵,然后train,test
@@ -42,8 +39,14 @@ if __name__ == '__main__':
         labels = libs.read_file(tmp_user_label_path)
         raw_dict = libs.read_file(dictionary_path)
     else:
-        data_proc = DataProcess(train_dirs, None, None)
-        user_raw_data = list(data_proc.get_all_user_obj_with_gender())
+        print('without history')
+        place = []
+        with open('data/place.txt') as f:
+            for row in f:
+                row = row.split()
+                place.append([row[0], int(row[1])])
+        data_proc = DataProcess(train_dirs, list(map(lambda row: row[0], place)))
+        user_raw_data = list(data_proc.get_all_user_obj_with_place())
         if os.path.isfile(dictionary_path):
             raw_dict = libs.read_file(dictionary_path)
         else:
